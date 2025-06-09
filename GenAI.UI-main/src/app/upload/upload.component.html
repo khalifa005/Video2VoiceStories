@@ -1,0 +1,104 @@
+ <form [formGroup]="form" (ngSubmit)="generateContent()">
+    <div class="flex items-center justify-between mb-4"> 
+    </div>
+ <div class="container mx-auto px-4 py-12">
+      <h1 class="text-3xl font-bold mb-8">Upload & Generate</h1>
+      
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Upload Section -->
+        <div class="border rounded-lg p-6">
+          <h2 class="text-xl font-semibold mb-4">Upload File</h2>
+          
+          <div 
+            class="border-2 border-dashed rounded-lg p-8 mb-6 flex flex-col items-center justify-center text-center"
+            [class.border-blue-300]="isDragging"
+            (dragover)="onDragOver($event)" 
+            (dragleave)="onDragLeave()" 
+            (drop)="onDrop($event)"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500 mb-4">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" x2="12" y1="3" y2="15"></line>
+            </svg>
+            
+            <p class="mb-2">Drag & drop your files here, or <span class="text-blue-500 cursor-pointer" (click)="fileInput.click()">browse</span></p>
+            <p class="text-sm text-gray-500">Supports text, audio, and video files (max 50MB)</p>
+            
+            <input 
+              #fileInput
+              type="file" 
+              class="hidden" 
+              (change)="onFileSelected($event)"
+              accept=".txt,.mp3,.mp4,.wav,.avi,.mov"
+            >
+          </div>
+
+          <div *ngIf="selectedFile" class="file-preview">
+  <div class="file-box">
+    <span class="file-icon">📄</span>
+    <span class="file-name">{{ selectedFile.name }}</span>
+    <span class="file-size">{{ selectedFile.size / 1024 | number:'1.0-2' }} KB</span>
+    <span class="remove-file" (click)="removeFile()">✕</span>
+  </div>
+</div>
+          
+          
+          <div class="mb-6">
+            <label for="outputType" class="block font-medium mb-2">Output Type</label>
+            <div class="relative">
+              <select  formControlName="outputType"
+                id="outputType" 
+                class="w-full px-3 py-2 border rounded-md appearance-none"
+                
+              >
+                <option value="userStories">User Stories</option>
+                <option value="testCases">Test Cases</option>
+                <option value="customFormat">Custom Format</option>
+              </select>
+              <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m6 9 6 6 6-6"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mb-6">
+            <label for="instructions" class="block font-medium mb-2">Additional Instructions (Optional)</label>
+            <textarea 
+            formControlName="additionalInstructions"
+              id="instructions" 
+              placeholder="E.g., Focus on security requirements" 
+              class="w-full px-3 py-2 border rounded-md"
+              rows="3"
+            ></textarea>
+          </div>
+          
+          
+           <button 
+           
+            class="w-full bg-gray-500 hover:bg-gray-600 text-white font-medium py-3 px-4 rounded-md transition-colors flex items-center justify-center gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+              <path d="M12 3a6 6 0 0 1-9 9 9 9 0 0 0 9-9Z"></path>
+            </svg>
+            Generate Content
+          </button>
+        </div>
+      
+        
+        <!-- Output Section -->
+        <div class="border rounded-lg p-6">
+          <h2 class="text-xl font-semibold mb-4">Generated Output</h2>
+          <div *ngIf="!generatedContent" class="h-[400px] flex items-center justify-center text-gray-500 text-center p-4">
+            <p>Upload a file and click "Generate Content" to see results here.</p>
+          </div>
+          <div *ngIf="generatedContent" class="h-[400px] overflow-auto p-4 border rounded-md">
+            <pre>{{ generatedContent }}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+</form>
